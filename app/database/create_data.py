@@ -214,12 +214,7 @@ def make_bd():
             {"name": "Фантастика", "pk": 7}, {"name": "Аниме", "pk": 8}, {"name": "Документальное", "pk": 9},
             {"name": "Короткометражка", "pk": 10}, {"name": "Ужасы", "pk": 11}, {"name": "Боевик", "pk": 12},
             {"name": "Мелодрама", "pk": 13}, {"name": "Детектив", "pk": 14}, {"name": "Авторское кино", "pk": 15},
-            {"name": "Мультфильм", "pk": 16}, {"name": "Вестерн", "pk": 17}, {"name": "Мюзикл", "pk": 18}],
-        "users": [
-            {"username": "user", "password": "user_password", "role": "user"},
-            {"username": "uploader", "password": "uploader_password", "role": "uploader"},
-            {"username": "admin", "password": "GOD", "role": "admin"},
-        ]
+            {"name": "Мультфильм", "pk": 16}, {"name": "Вестерн", "pk": 17}, {"name": "Мюзикл", "pk": 18}]
     }
     # -------------------------------------------------------
 
@@ -253,10 +248,5 @@ def make_bd():
         with db.session.begin():
             db.session.add(d)
 
-    for user in data["users"]:
-        u = User(**user
-        )
-        with db.session.begin():
-            db.session.add(u)
 if __name__ == '__main__':
     make_bd()
