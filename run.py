@@ -5,3 +5,4 @@ if __name__ == '__main__':
     app = create_app(Config())
     config_app(app)
     app.run(host="localhost", port=5000)
+    x=1
