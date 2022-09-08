@@ -21,6 +21,5 @@ movie_parser_with_names.add_argument('genre_name', type=str, help='Genre name', 
 
 
 movie_query_parser = reqparse.RequestParser()
-movie_query_parser.add_argument('director_id', type=int, help='director_id for filtering', store_missing=False)
-movie_query_parser.add_argument('genre_id', type=int, help='genre_id for filtering', store_missing=False)
-movie_query_parser.add_argument('year', type=int, help='year for filtering', store_missing=False)
+movie_query_parser.add_argument('status', type=str, help='new movie filtering parrameter', store_missing=False)
+movie_query_parser.add_argument('page', type=int, help='pagination by 12 items', store_missing=False)

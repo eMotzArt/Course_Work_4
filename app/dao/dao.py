@@ -2,6 +2,8 @@ from flask import g
 
 from app.database import db
 from app.dao.model import Movie, Genre, Director, User, UserToken
+from sqlalchemy import desc
+from werkzeug.exceptions import NotFound
 
 
 class BaseDAO():
@@ -50,11 +52,15 @@ class MovieDAO(BaseDAO):
         data.update({'director_id': director_id, 'genre_id': genre_id})
         return super().create_item(**data)
 
-    def get_items_with_filtering(self, **params):
+    def get_items_filtering(self, **params):
         query = self.model.query
-        for filter_ in params:
-            if value := params.get(filter_):
-                query = query.filter(getattr(self.model, filter_) == value)
+        if params.get('status'):
+            query = query.order_by(desc(self.model.year)).order_by(desc(self.model.created))
+        if page := params.get('page'):
+            try:
+                return query.paginate(page, 12).items
+            except NotFound:
+                return []
         return query.all()
 
 

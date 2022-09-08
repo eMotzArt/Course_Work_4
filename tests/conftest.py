@@ -47,5 +47,5 @@ def movie_dao():
     movie_dao.delete_item = MagicMock()
     movie_dao.update_item = MagicMock(return_value=Movie(id=2, title='new_title', description='new_desc', trailer='new_tube', year=1990, rating=0.1, genre_id=5, director_id=5))
     movie_dao.add_movie_with_names = MagicMock(return_value=Movie(id=5, title="title_5", description='desc_5', trailer='youtube_5', year=1995, rating=10.0, genre_id=5, director_id=5))
-    movie_dao.get_items_with_filtering = MagicMock(return_value=movie_3)
+    movie_dao.get_items_filtering = MagicMock(return_value=movie_3)
     return movie_dao

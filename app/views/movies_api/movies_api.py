@@ -57,7 +57,7 @@ class MovieView(Resource):
     def get(self, pk):
         if result := MovieService().get_movie_by_pk(pk):
             return result, 200
-        return '',404
+        return '', 404
 
     @api.expect(movie_parser)
     @api.response(code=204, description="Successfully modified")
