@@ -79,8 +79,8 @@ class UserDAO(BaseDAO):
 class AuthDAO(BaseDAO):
     model = User
 
-    def get_user_by_name(self, username):
-        if user := self.model.query.filter_by(username=username).first():
+    def get_user_by_name(self, email):
+        if user := self.model.query.filter_by(email=email).first():
             return user
 
     def record_refresh_token(self, user_id, token):
