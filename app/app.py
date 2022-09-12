@@ -1,7 +1,9 @@
 from flask import Flask, g
+from flask_cors import CORS
+
 from app.views import api
 from app.database import db
-from flask_cors import CORS
+
 
 def create_app(config):
     new_app = Flask(__name__)
@@ -24,6 +26,7 @@ def create_app(config):
         return response
 
     return new_app
+
 
 def config_app(app):
     CORS(app=app)
