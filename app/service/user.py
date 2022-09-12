@@ -19,4 +19,5 @@ class UserService:
         user = kwargs.get('user')
         if Security().get_hash(old_password) == user.password:
             user.password = Security().get_hash(new_password)
-        return
+
+        return False
