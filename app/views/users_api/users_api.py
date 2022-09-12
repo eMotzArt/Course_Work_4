@@ -5,14 +5,16 @@ from app.views.users_api.parser import user_parser
 from app.service import UserService
 
 
-api = Namespace('users')
+api = Namespace('user')
 
 # api model
 user = api.model('User', {
-    'id': fields.Integer(readonly=True, description='User unique identifier'),
-    'username': fields.String(required=True, description='User name'),
-    'password': fields.String(required=True, description='User password'),
-    'role': fields.String(required=True, description='User role')
+    # 'id': fields.Integer(readonly=True, description='User unique identifier'),
+    'name': fields.String(required=True, description='User name'),
+    'surname': fields.String(required=True, description='User password'),
+    'favorite_genre': fields.Integer(required=True, description='User role'),
+    # для костыля, описал ниже
+    'favourite_genre': fields.Integer(required=True, description='fix')
 })
 
 @api.route('/')
