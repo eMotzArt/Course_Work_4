@@ -89,7 +89,6 @@ class AuthDAO(BaseDAO):
         else:
             user_token = UserToken(user_id=user_id, refresh_token=token)
             self.session.add(user_token)
-        self.session.flush()
 
     def compare_refresh_tokens(self, user_id, user_refresh_token):
         if user := self.session.query(UserToken).filter_by(user_id=user_id).first():

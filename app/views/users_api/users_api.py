@@ -1,16 +1,15 @@
 from flask_restx import Namespace, Resource, fields
-from sqlalchemy.exc import IntegrityError
 
-from app.views.users_api.parser import user_update_info_parser, user_update_password_parser
+from .parser import user_update_info_parser, user_update_password_parser
 from app.service import UserService
 from app.utils import auth_required
 
 
 api = Namespace('user')
 
+
 # api model
 user = api.model('User', {
-    # 'id': fields.Integer(readonly=True, description='User unique identifier'),
     'name': fields.String(required=True, description='User name'),
     'surname': fields.String(required=True, description='User password'),
     'favorite_genre': fields.Integer(required=True, description='User role'),
@@ -26,10 +25,9 @@ class UserView(Resource):
         user = kwargs.get('user')
         # Эта строчка - костыль, т.к. в front-end'e ожидается  не favorite_genre, а  favourite_genre
         user.favourite_genre = user.favorite_genre
-        return user
+        return user, 200
 
     @api.expect(user_update_info_parser)
-    # @api.marshal_with(user, code=201)
     @auth_required()
     def patch(self, **kwargs):
         new_data = user_update_info_parser.parse_args()
@@ -43,16 +41,8 @@ class UserView(Resource):
 @api.route('/password/')
 class UserPassView(Resource):
     @api.expect(user_update_password_parser)
-    # @api.marshal_with(user, code=201)
     @auth_required()
     def put(self, **kwargs):
         passwords = user_update_password_parser.parse_args()
         UserService().update_user_password(**kwargs, **passwords)
         return '', 204
-
-#
-#
-# @api.errorhandler(IntegrityError)
-# def handle_exception(error):
-#     message = f"Error: {error.orig} with params: {error.params}"
-#     return {'message': message}, 500

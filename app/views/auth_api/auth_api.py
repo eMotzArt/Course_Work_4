@@ -6,6 +6,7 @@ from app.service import AuthService
 
 api = Namespace('auth')
 
+
 # api model
 user_tokens = api.model('User_token', {
     'access_token': fields.String(required=True, description='User access token'),
@@ -13,16 +14,14 @@ user_tokens = api.model('User_token', {
 })
 
 
-
 @api.route('/register/')
 class RegisterView(Resource):
     @api.expect(auth_user_parser)
-    # @api.marshal_with(user, code=201)
     def post(self):
         data = auth_user_parser.parse_args()
         AuthService().register_new_user(**data)
 
-        return '', 201
+        return '', 204
 
 
 @api.route('/login/')
@@ -40,4 +39,4 @@ class AuthView(Resource):
         print(f"ПОПЫТКА ОБНОВИТЬ ТОКЕН ПО РЕФРЕШ ТОКЕНУ\n {data.get('refresh_token')}")
         result = AuthService().get_tokens_by_refresh_token(**data)
         print(f"Сгенерированы новые токены \n {result}")
-        return result
+        return result, 201
