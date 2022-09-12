@@ -37,4 +37,7 @@ class AuthView(Resource):
     @api.marshal_with(user_tokens, code=201)
     def put(self):
         data = auth_user_refresh_token_parser.parse_args()
-        return AuthService().get_tokens_by_refresh_token(**data)
+        print(f"ПОПЫТКА ОБНОВИТЬ ТОКЕН ПО РЕФРЕШ ТОКЕНУ\n {data.get('refresh_token')}")
+        result = AuthService().get_tokens_by_refresh_token(**data)
+        print(f"Сгенерированы новые токены \n {result}")
+        return result

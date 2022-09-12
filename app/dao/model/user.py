@@ -1,6 +1,7 @@
-from .base import Base
 from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
+
+from .base import Base
 from .genre import Genre
 from .user_favmovies import user_favmovies
 
@@ -15,4 +16,3 @@ class User(Base):
     favorite_genre = Column(Integer, ForeignKey(Genre.id))
     genre = relationship(Genre)
     favorite_movies = relationship('Movie', secondary=user_favmovies)
-

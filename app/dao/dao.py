@@ -1,9 +1,9 @@
 from flask import g
-
-from app.database import db
-from app.dao.model import Movie, Genre, Director, User, UserToken
 from sqlalchemy import desc
 from werkzeug.exceptions import NotFound
+
+from app.database import db
+from .model import Movie, Genre, Director, User, UserToken
 
 
 class BaseDAO():

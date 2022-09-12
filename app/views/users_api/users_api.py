@@ -1,8 +1,9 @@
 from flask_restx import Namespace, Resource, fields
 from sqlalchemy.exc import IntegrityError
 
-from app.views.users_api.parser import user_parser
+from app.views.users_api.parser import user_update_info_parser, user_update_password_parser
 from app.service import UserService
+from app.utils import auth_required
 
 
 api = Namespace('user')
@@ -18,39 +19,40 @@ user = api.model('User', {
 })
 
 @api.route('/')
-class UsersView(Resource):
-    @api.marshal_list_with(user)
-    def get(self):
-        return UserService().get_users()
-
-    @api.expect(user_parser)
-    @api.marshal_with(user, code=201)
-    def post(self):
-        data = user_parser.parse_args()
-        return UserService().add_new_user(**data)
-
-@api.route('/<int:pk>/')
 class UserView(Resource):
-    @api.marshal_with(user)
-    @api.response(code=404, description='User with this pk is not found in database')
-    def get(self, pk):
-        if result := UserService().get_user_by_pk(pk):
-            return result, 200
-        return '', 404
+    @api.marshal_list_with(user)
+    @auth_required()
+    def get(self, **kwargs):
+        user = kwargs.get('user')
+        # Эта строчка - костыль, т.к. в front-end'e ожидается  не favorite_genre, а  favourite_genre
+        user.favourite_genre = user.favorite_genre
+        return user
 
-    @api.expect(user_parser)
-    @api.response(code=204, description="Successfully modified")
-    @api.marshal_with(user)
-    def put(self, pk):
-        data = user_parser.parse_args()
-        return UserService().update_user(pk, **data)
+    @api.expect(user_update_info_parser)
+    # @api.marshal_with(user, code=201)
+    @auth_required()
+    def patch(self, **kwargs):
+        new_data = user_update_info_parser.parse_args()
+        #  Эта строчка - костыль, т.к. с фронта приходит не favorite_genre, а favourite_genre
+        if wrong_genre := new_data.pop('favourite_genre'):
+            new_data['favorite_genre'] = wrong_genre
+        kwargs['parsed_data'] = new_data
+        UserService().update_user_info(**kwargs)
+        return '', 204
 
-    @api.response(code=204, description="Successfully deleted")
-    def delete(self, pk):
-        UserService().delete_user(pk)
-        return None, 204
+@api.route('/password/')
+class UserPassView(Resource):
+    @api.expect(user_update_password_parser)
+    # @api.marshal_with(user, code=201)
+    @auth_required()
+    def put(self, **kwargs):
+        passwords = user_update_password_parser.parse_args()
+        UserService().update_user_password(**kwargs, **passwords)
+        return '', 204
 
-    @api.errorhandler(IntegrityError)
-    def handle_exception(error):
-        message = f"Error: {error.orig} with params: {error.params}"
-        return {'message': message}, 500
+#
+#
+# @api.errorhandler(IntegrityError)
+# def handle_exception(error):
+#     message = f"Error: {error.orig} with params: {error.params}"
+#     return {'message': message}, 500

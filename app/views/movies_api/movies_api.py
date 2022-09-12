@@ -3,8 +3,9 @@ from sqlalchemy.exc import IntegrityError
 
 from .parser import movie_parser, movie_query_parser, movie_parser_with_names
 from app.service import MovieService
-from app.utils.decorators import auth_required, UserRole
-
+from app.utils.decorators import auth_required
+from ..genres_api.genres_api import genre
+from ..directors_api.directors_api import director
 
 api = Namespace('movies')
 
@@ -17,7 +18,9 @@ movie = api.model('Movie', {
     'year': fields.Integer(required=True, description='Movie release year'),
     'rating': fields.Float(required=False, description='Movie rating'),
     'genre_id': fields.Integer(required=True, description='Genre id'),
-    'director_id': fields.Integer(required=True, description='Director id')
+    'genre': fields.Nested(genre),
+    'director_id': fields.Integer(required=True, description='Director id'),
+    'director': fields.Nested(director)
 })
 
 

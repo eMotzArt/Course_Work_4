@@ -3,9 +3,6 @@ from sqlalchemy.exc import IntegrityError
 
 from app.service import GenreService
 from .parser import genre_parser
-from app.utils.decorators import auth_required, UserRole
-
-
 api = Namespace('genres')
 
 # api model
@@ -17,25 +14,14 @@ genre = api.model('Genre', {
 @api.route('/')
 class GenresView(Resource):
     @api.marshal_list_with(genre)
-    # @auth_required(UserRole.admin, UserRole.uploader, UserRole.user)
     def get(self):
         return GenreService().get_genres()
-
-    @api.response(code=201, description="Successfully created")
-    @api.response(code=500, description="Integrity Error")
-    @api.expect(genre_parser)
-    @api.marshal_with(genre)
-    @auth_required(UserRole.admin, UserRole.uploader)
-    def post(self):
-        data = genre_parser.parse_args()
-        return GenreService().add_new_genre(**data), 201
 
 
 @api.route('/<int:pk>/')
 class GenreView(Resource):
     @api.response(code=404, description='Genre with this pk is not found in database')
     @api.marshal_with(genre)
-    # @auth_required(UserRole.admin, UserRole.uploader, UserRole.user)
     def get(self, pk):
         if result := GenreService().get_genre_by_pk(pk):
             return result, 200

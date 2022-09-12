@@ -1,6 +1,5 @@
-from app.database import db
-from sqlalchemy import Column, String, Integer, ForeignKey, Table
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, ForeignKey, Table
+
 from .base import Base
 
 user_favmovies = Table(
@@ -9,4 +8,3 @@ user_favmovies = Table(
     Column('user_id', ForeignKey('users.id')),
     Column('movie_id', ForeignKey('movies.id'))
 )
-

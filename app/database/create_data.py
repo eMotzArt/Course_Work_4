@@ -1,6 +1,6 @@
 from flask import Flask
 from app.database import db
-from app.dao.model import Director, Genre, Movie, User, UserToken
+from app.dao.model import Director, Genre, Movie
 
 
 app = Flask(__name__)

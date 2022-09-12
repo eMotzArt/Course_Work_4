@@ -23,8 +23,6 @@ def create_app(config):
             g.session.close()
         return response
 
-
-
     return new_app
 
 def config_app(app):
