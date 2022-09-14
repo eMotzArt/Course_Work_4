@@ -28,7 +28,6 @@ class BaseDAO():
     def create_item(self, **data):
         new_item = self.model(**data)
         self.session.add(new_item)
-        self.session.flush()
         return new_item
 
     def update_item(self, pk, **data):
