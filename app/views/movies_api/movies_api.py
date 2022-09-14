@@ -30,9 +30,7 @@ class MoviesView(Resource):
     def get(self):
         params = movie_query_parser.parse_args()
 
-        if result := MovieService().get_movies(**params):
-            return result, 200
-        return '', 404
+        return MovieService().get_movies(**params), 200
 
 
 @api.route('/<int:pk>/')

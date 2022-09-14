@@ -2,6 +2,8 @@ from flask_restx import Namespace, Resource, fields
 
 from app.service import DirectorService
 
+from .parser import director_query_parser
+
 
 api = Namespace('directors')
 
@@ -16,8 +18,10 @@ director = api.model('Director', {
 @api.route('/')
 class DirectorsView(Resource):
     @api.marshal_list_with(director)
+    @api.expect(director_query_parser)
     def get(self):
-        return DirectorService().get_directors(), 200
+        params = director_query_parser.parse_args()
+        return DirectorService().get_directors(**params), 200
 
 
 @api.route('/<int:pk>/')
