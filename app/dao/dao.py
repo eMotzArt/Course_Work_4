@@ -42,35 +42,6 @@ class BaseDAO():
 class MovieDAO(BaseDAO):
     model = Movie
 
-    def get_or_create_parent_id(self, query, model):
-        item = self.session.query(model).filter(model.name.ilike(query)).first()
-        if not item:
-            item = model(name=query)
-            self.session.add(item)
-            self.session.flush()
-        return item.id
-
-    def add_movie_with_names(self, **data):
-        director_name = data.pop('director_name')
-        genre_name = data.pop('genre_name')
-        if director_name:
-            director_id = self.get_or_create_parent_id(director_name, Director)
-        if genre_name:
-            genre_id = self.get_or_create_parent_id(genre_name, Genre)
-        data.update({'director_id': director_id, 'genre_id': genre_id})
-        return super().create_item(**data)
-
-    def get_items_filtering(self, **params):
-        query = self.model.query
-        if params.get('status'):
-            query = query.order_by(desc(self.model.year)).order_by(desc(self.model.created))
-        if page := params.get('page'):
-            try:
-                return query.paginate(page, 12).items
-            except NotFound:
-                return []
-        return query.all()
-
 
 class GenreDAO(BaseDAO):
     model = Genre

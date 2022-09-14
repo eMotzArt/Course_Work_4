@@ -24,12 +24,10 @@ movie = api.model('Movie', {
 
 @api.route('/')
 class MoviesView(Resource):
-    @api.response(code=404, description='Movies with this filters not found')
     @api.expect(movie_query_parser)
     @api.marshal_list_with(movie)
     def get(self):
         params = movie_query_parser.parse_args()
-
         return MovieService().get_movies(**params), 200
 
 
