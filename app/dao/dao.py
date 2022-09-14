@@ -11,8 +11,16 @@ class BaseDAO():
         self.session = g.session
         self.model: db.Model
 
-    def get_items(self):
-        return self.model.query.all()
+    def get_items(self, **params):
+        query = self.model.query
+        if params.get('status'):
+            query = query.order_by(desc(self.model.year)).order_by(desc(self.model.created))
+        if page := params.get('page'):
+            try:
+                return query.paginate(page, 12).items
+            except NotFound:
+                return []
+        return query.all()
 
     def get_item(self, pk):
         return self.model.query.get(pk)

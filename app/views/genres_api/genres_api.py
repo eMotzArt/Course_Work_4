@@ -2,6 +2,8 @@ from flask_restx import Namespace, Resource, fields
 
 from app.service import GenreService
 
+from .parser import genre_query_parser
+
 
 api = Namespace('genres')
 
@@ -15,9 +17,11 @@ genre = api.model('Genre', {
 
 @api.route('/')
 class GenresView(Resource):
+    @api.expect(genre_query_parser)
     @api.marshal_list_with(genre)
     def get(self):
-        return GenreService().get_genres()
+        params = genre_query_parser.parse_args()
+        return GenreService().get_genres(**params)
 
 
 @api.route('/<int:pk>/')

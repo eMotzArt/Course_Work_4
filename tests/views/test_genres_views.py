@@ -29,7 +29,7 @@ class TestGenresView:
     def test_genre(self, client, genre):
         response = client.get("/genres/1/")
         assert response.status_code == 200
-        assert response.json == {"id": genre.id, "name": genre.name}
+        assert response.json == genre
 
     def test_genre_not_found(self, client, genre):
         response = client.get("/genres/2/")
