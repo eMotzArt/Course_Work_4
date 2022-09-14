@@ -4,3 +4,8 @@ class Config:
     SQLALCHEMY_ECHO = False
     JSON_AS_ASCII = False
     DEBUG = True
+
+
+class TestingConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:?expire_on_commit=False"
