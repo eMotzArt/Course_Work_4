@@ -1,6 +1,7 @@
-from app.database import db
+from sqlalchemy import Column, String
+from .base import Base
 
-class Genre(db.Model):
-    __tablename__ = 'genre'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True, nullable=False)
+class Genre(Base):
+    __tablename__ = 'genres'
+
+    name = Column(String(100), unique=True, nullable=False)

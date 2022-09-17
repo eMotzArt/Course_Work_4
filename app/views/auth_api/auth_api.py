@@ -1,10 +1,11 @@
 from flask_restx import Namespace, Resource, fields
 
-from .parser import auth_user_parser, auth_user_refresh_token_parser
+from .parser import auth_user_refresh_token_parser, auth_user_parser
 from app.service import AuthService
 
 
 api = Namespace('auth')
+
 
 # api model
 user_tokens = api.model('User_token', {
@@ -12,7 +13,17 @@ user_tokens = api.model('User_token', {
     'refresh_token': fields.String(required=True, description='User refresh token')
 })
 
-@api.route('/')
+
+@api.route('/register/')
+class RegisterView(Resource):
+    @api.expect(auth_user_parser)
+    def post(self):
+        data = auth_user_parser.parse_args()
+        AuthService().register_new_user(**data)
+        return '', 204
+
+
+@api.route('/login/')
 class AuthView(Resource):
     @api.expect(auth_user_parser)
     @api.marshal_with(user_tokens, code=201)
@@ -24,4 +35,5 @@ class AuthView(Resource):
     @api.marshal_with(user_tokens, code=201)
     def put(self):
         data = auth_user_refresh_token_parser.parse_args()
-        return AuthService().get_tokens_by_refresh_token(**data)
+        return AuthService().get_tokens_by_refresh_token(**data), 201
+

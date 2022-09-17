@@ -1,3 +1,3 @@
-__all__ = ['Security', 'auth_required', 'UserRole']
+__all__ = ['Security', 'auth_required']
 from .security import Security
-from .decorators import auth_required, UserRole
+from .decorators import auth_required

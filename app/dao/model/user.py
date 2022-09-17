@@ -1,21 +1,18 @@
-import enum
+from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 
-from app.database import db
-
-
-class RoleEnum(enum.Enum):
-    user = 'user'
-    uploader = 'uploader'
-    admin = 'admin'
-
-    def __str__(self):
-        return self.name
+from .base import Base
+from .genre import Genre
+from .user_favmovies import user_favmovies
 
 
-class User(db.Model):
-    __tablename__ = 'user'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, nullable=False, unique=True)
-    password = db.Column(db.String, nullable=False)
-    role = db.Column(db.Enum(RoleEnum), nullable=False, default='user')
-    token_for_user = db.relationship("UserToken", uselist=False, back_populates="user_for_token")
+class User(Base):
+    __tablename__ = 'users'
+
+    email = Column(String(255), unique=True, nullable=False)
+    password = Column(String(255), nullable=False)
+    name = Column(String(127))
+    surname = Column(String(127))
+    favorite_genre = Column(Integer, ForeignKey(Genre.id))
+    genre = relationship(Genre)
+    favorite_movies = relationship('Movie', secondary=user_favmovies)

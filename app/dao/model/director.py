@@ -1,6 +1,7 @@
-from app.database import db
+from sqlalchemy import Column, String
+from .base import Base
 
-class Director(db.Model):
-    __tablename__ = 'director'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True, nullable=False)
+class Director(Base):
+    __tablename__ = 'directors'
+
+    name = Column(String(100), unique=True, nullable=False)
